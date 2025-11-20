@@ -14,7 +14,10 @@ export default function Question(){
 });
 
   const [selectedOption, setSelectedOption] = useState(null);
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState(() => {
+  const saved = localStorage.getItem("score");
+  return saved ? JSON.parse(saved) : 0;
+});
   const [isFinished, setIsFinished] = useState(() => {
   const saved = localStorage.getItem("isFinished");
   return saved ? JSON.parse(saved) : false;
@@ -32,6 +35,10 @@ const [name,setname]=useState(()=>{
 useEffect(() => {
   localStorage.setItem("isFinished", JSON.stringify(isFinished));
 }, [isFinished]);
+
+useEffect(() => {
+  localStorage.setItem("score",score);
+}, [score]);
 
 useEffect(() => {
   localStorage.setItem("currentIndex", currentIndex);
