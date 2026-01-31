@@ -16,7 +16,7 @@ const chick = saved!==null ? parseInt(saved) : 0 ;
    }
 
     return(
-        <div className="min-h-screen flex justify-center items-center bg-gray-100 dark:bg-slate-900 " dir="rtl">
+        <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 dark:bg-slate-900 " dir="rtl">
              <div className="w-[400px] md:w-[600px] bg-white dark:bg-slate-800 shadow-2xl p-8 rounded-2xl text-center">
          <AnimatePresence>
                      <motion.div
@@ -27,12 +27,12 @@ const chick = saved!==null ? parseInt(saved) : 0 ;
                      >
                 <div className="flex flex-col justify-center items-center">
                 <img src="/image/logo.png" width={"200px"}></img>
-                  <div className=" text-right text-emerald-900 dark:text-emerald-500 ">
+                  {/* <div className=" text-right text-emerald-900 dark:text-emerald-500 ">
                     <p>إعداد :</p>
                     <p>الاستاذة / رقية بنت حسين أحمد حامظي</p>
                     <p>ماجستير قياس وتقويم - بكالوريوس كيمياء</p>
                     <p>إدارة تعليم جازان - المملكة العربية السعودية</p>
-                    </div>
+                    </div> */}
                 
                 </div>
         <div>
@@ -55,7 +55,7 @@ const chick = saved!==null ? parseInt(saved) : 0 ;
         </motion.div>
         </AnimatePresence>
         </div>
-
+<div className="text-center dark:text-white  p-3">جميع الحقوق محفوظة لدى المعلمة / رقية حسين حامظي <span className="text-[20px]">©</span> {new Date().getFullYear()}</div>
         </div>
 
     )
