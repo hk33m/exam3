@@ -1,17 +1,35 @@
 import { useState,useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { RefreshCcw,UserPen } from "lucide-react";
+import { RefreshCcw,UserPen,X,Check } from "lucide-react";
 import { useNavigate } from "react-router-dom"
 import { questions } from "./data/questions";
+import toast, { Toaster } from "react-hot-toast";
+import { useRef } from "react";
+
 
 
 
 export default function Question(){
+const correctRef = useRef(null);
+const wrongRef = useRef(null);
+
  const navigate =useNavigate();
+ const [trueq,settrueq]=useState(0);
+ const [falseq,setfalseq]=useState(0);
  const [currentIndex, setCurrentIndex] = useState(() => {
   const saved = localStorage.getItem("currentIndex");
   return saved !== null ? parseInt(saved) : 0;
 });
+
+const motivationMessages = [
+  "ممتاز! استمر بنفس الحماس 🚀",
+  "أداء جميل جدًا 👏 كمل!",
+  "خطوة جديدة نحو النجاح 🌟",
+  "تركيزك واضح، واصل 👌",
+  "كل سؤال يقربك للإنجاز 💪",
+  "رائع! السؤال التالي بانتظارك 🔥",
+];
+
 
   const [selectedOption, setSelectedOption] = useState(null);
   const [score, setScore] = useState(() => {
@@ -54,6 +72,39 @@ useEffect(() => {
 
     if (selectedOption === questions[currentIndex].correct) {
       setScore(score + 1);
+      settrueq(trueq=>trueq+1);
+      correctRef.current.currentTime = 0;
+      correctRef.current.play();
+      toast("إجابة صحيحة! أحسنت ",
+  {
+    icon: <Check></Check>,
+    style: {
+      borderRadius: '10px',
+      background: 'green',
+      color: '#fff',
+    },
+  }
+);
+    }else{
+      setfalseq(falseq=>falseq+1);
+      wrongRef.current.currentTime = 0;
+      wrongRef.current.play();
+      toast(' إجابة خاطئة!حاول في السؤال التالي',
+  {
+    icon:<X></X>,
+    style: {
+      borderRadius: '10px',
+      background: 'red',
+      color: '#fff',
+    },
+  }
+);
+    }
+
+    if((trueq)%9==0 && trueq!=0){
+    const msg =
+    motivationMessages[Math.floor(Math.random() * motivationMessages.length)];
+    toast(msg, { icon: "🌟" });
     }
 
     setAnswers((prev) => [
@@ -70,6 +121,7 @@ useEffect(() => {
       },
     ]);
 
+    
 
     if (currentIndex + 1 < questions.length) {
       setCurrentIndex(currentIndex + 1);
@@ -79,6 +131,7 @@ useEffect(() => {
     }
   };
 
+
   const resetQuiz = () => {
   localStorage.removeItem("currentIndex");
   localStorage.removeItem("answers");
@@ -87,6 +140,8 @@ useEffect(() => {
   setScore(0);
   setIsFinished(false);
   setSelectedOption(null);
+  settrueq(0);
+  setfalseq(0);
 
 };
 
@@ -97,8 +152,23 @@ useEffect(() => {
 
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-slate-900 flex flex-col justify-center items-center p-5" dir="rtl">
+    <div className="min-h-screen bg-gray-100 dark:bg-slate-900 flex flex-col justify-center pt-14 items-center p-5" dir="rtl">
+     <audio ref={correctRef} src="/correct.wav" preload="auto" />
+     <audio ref={wrongRef} src="/wrong.wav" preload="auto" />
+
+      {/* شريط التقدم */}
+      <div className="flex gap-3 absolute top-3.5 right-4">
+                <h1 className="px-4 py-2 bg-green-800 text-white rounded-lg">إجابة صحيحة : {trueq}</h1>
+                <h1 className="px-4 py-2 bg-red-800 text-white rounded-lg">إجابة خاطئة : {falseq}</h1>
+              </div>
+<div className="w-[400px] md:w-[800px] mb-2 bg-gray-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+  <div
+    className="bg-blue-600 h-full transition-all duration-500"
+    style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
+  />
+</div>
       <div className=" w-[400px] md:w-[800px] bg-white dark:bg-slate-800 shadow-2xl py-8 px-6 rounded-2xl">
+        <Toaster position="top-center" />
         
         {/* ===================== الأسئلة ===================== */}
         {!isFinished && (
@@ -114,6 +184,7 @@ useEffect(() => {
               <h1 className="text-xl font-bold text-slate-900 dark:text-white">
                 السؤال {currentIndex + 1} / {questions.length}
               </h1>
+              
               <div className="flex gap-2">
               {currentIndex>0 ?(
                 <RefreshCcw className="text-slate-900 dark:text-white" onClick={()=>{
@@ -124,6 +195,7 @@ useEffect(() => {
               ):(
                 ""
               )}
+              
                 <UserPen className="text-slate-900 dark:text-white" onClick={()=>{navigate("/");}}></UserPen>
                </div>
                  </div>
