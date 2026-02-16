@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
@@ -14,6 +15,10 @@ const chick = saved!==null ? parseInt(saved) : 0 ;
         localStorage.setItem("name",JSON.stringify(name));
         navigate("/question");
    }
+
+   const x = localStorage.getItem("isFinished");
+const isfinish = x!==null ? saved : false ;
+   
 
     return(
         <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 dark:bg-slate-900 " dir="rtl">
@@ -36,7 +41,7 @@ const chick = saved!==null ? parseInt(saved) : 0 ;
                 
                 </div>
         <div>
-            <h1 className="text-xl dark:text-white">علوم الحياة </h1>
+           <h1 className="text-xl dark:text-white">علوم الحياة </h1>
             <h1 className="text-gray-500 dark:text-gray-400"> التركيب والوظيفة في المخلوقات الحية , تنظيم المخلوقات الحية وتنوعها , الوراثة</h1>
         </div>
         <div>
@@ -45,13 +50,13 @@ const chick = saved!==null ? parseInt(saved) : 0 ;
             onChange={(event)=>{
               setname(event.target.value);
             }}  
-            className=" w-full px-2 py-3 text-center dark:text-white rounded-lg shadow-lg outline-0 outline-blue-600" placeholder="اسم الطالبة"></input>
+            className=" w-full px-2 py-3 text-center dark:text-white rounded-lg shadow-lg outline-0 outline-blue-600" readOnly={x=="true"}   placeholder="اسم الطالبة"></input>
         </div>
         <motion.button
          whileTap={{ scale: 0.9 }}
          onClick={handelbutton}
          disabled={name==""}
-        className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl text-lg shadow-lg disabled:bg-gray-300 disabled:cursor-not-allowed">{chick!==0 ? "إكمال الاسئلة" : "بدء الاسئلة"} </motion.button>
+        className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl text-lg shadow-lg disabled:bg-gray-300 disabled:cursor-not-allowed">{chick==0 ? "بدء الاسئلة" : x=="true" ? "عرض النتيجة" : "إكمال الأسئلة"} </motion.button>
         </motion.div>
         </AnimatePresence>
         </div>
